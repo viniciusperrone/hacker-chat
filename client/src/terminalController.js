@@ -34,10 +34,27 @@ class TerminalController {
 
             chat.addItem(`{${collor}}{bold}${userName}{/}: ${message}`);
             screen.render();
+
+
         }
     }
+
+    #onLogChanged({ screen, activityLog }){
+        return msg => {
+            
+            const { userName } = msg.split(/\s/);
+            
+            const collor = this.#getUserCollor(userName);
+
+            activityLog.addItem(`{${collor}}{bold}${msg.toString()}{/}`);
+        
+        }
+    }
+
     #registerEvents(eventEmitter, components){
         eventEmitter.on('message:received', this.#onMessageReceived(components));
+        eventEmitter.on('activity:updated', this.#onLogChanged(components));
+        // eventEmitter.on('activity:updated', this.#onLogChanged(components));
 
     }
     async initializeTable(eventEmitter) {
